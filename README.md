@@ -1,4 +1,12 @@
-# vue-d3-visualization
+# Vue Visualization using D3
+
+## Technology Used
+
+* Vue.js
+* Vue CLI
+* D3.js
+* Lodash
+* Axios
 
 ## Project setup
 ```
