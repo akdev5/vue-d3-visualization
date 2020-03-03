@@ -1,17 +1,35 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <form action="#" @submit.prevent="getIssues">
+      <div class="form-group">
+        <input
+          type="text"
+          placeholder="owner/repo Name"
+          v-model="repository"
+          class="col-md-2 col-md-offset-5"
+        >
+      </div>
+    </form>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import moment from 'moment'
+import axios from 'axios'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  data() {
+    return {
+      issues: [],
+      repository: '',
+      startDate: null
+    };
+  },
+  methods: {
+    getIssues() {
+      // code goes in here
+    }
   }
 }
 </script>
