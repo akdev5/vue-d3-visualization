@@ -1,5 +1,6 @@
 <template>
-  <div id="app">
+  <div class="container" id="app">
+    <h2>The issues on Github</h2>
     <div class="row">
       <div class="col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
         <form action="#" @submit.prevent="getIssues">
@@ -12,7 +13,17 @@
             >
           </div>
         </form>
+
+        <div class="alert alert-info" v-show="loading">Loading...</div>
+        <div class="alert alert-danger" v-show="errored">An error occured</div>
       </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <BarChart :issues="issues"></BarChart>
+      </div>
+      <div class="col-md-12"></div>
     </div>
   </div>
 </template>
@@ -21,34 +32,43 @@
 import moment from 'moment'
 import axios from 'axios'
 
+import BarChart from './components/BarChart.vue'
+
 export default {
   name: 'App',
+  components: {
+    BarChart
+  },
   data() {
     return {
+      loading: false,
+      errored: false,
       issues: [],
       repository: '',
       startDate: null
-    };
+    }
   },
   methods: {
     getDateRange() {
-      const startDate = moment().subtract(6, 'days');
-      const endDate = moment();
-      const dates = [];
+      const startDate = moment().subtract(6, 'days')
+      const endDate = moment()
+      const dates = []
 
       while (startDate.isSameOrBefore(endDate)) {
         dates.push({
           day: startDate.format('MMM Do YY'),
           issues: 0
-        });
+        })
 
-        startDate.add(1, 'days');
+        startDate.add(1, 'days')
       }
 
-      return dates;
+      return dates
     },
     getIssues() {
-      this.startDate = moment().subtract(6, 'days').format('YYYY-MM-DD');
+      this.loading = true
+      this.errored = false
+      this.startDate = moment().subtract(6, 'days').format('YYYY-MM-DD')
 
       axios
         .get(
@@ -56,20 +76,21 @@ export default {
           { params: { per_page: 100 } }
         )
         .then(response => {
-          const payload = this.getDateRange();
+          const payload = this.getDateRange()
 
           response.data.items.forEach(item => {
-            const key = moment(item.created_at).format('MMM Do YY');
-            const obj = payload.filter(o => o.day === key)[0];
-            obj.issues += 1;
-          });
+            const key = moment(item.created_at).format('MMM Do YY')
+            const obj = payload.filter(o => o.day === key)[0]
+            obj.issues += 1
+          })
 
-          this.issues = payload;
-          console.log(this.issues);
+          this.issues = payload
         })
         .catch(error => {
-          console.error(error);
-        });
+          console.log(error)
+          this.errored = true
+        })
+        .finally(() => (this.loading = false))
     }
   }
 }
@@ -83,5 +104,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.bar {
+  fill: #319bbe;
 }
 </style>
