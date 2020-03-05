@@ -19,11 +19,13 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" v-show="!loading && issues.length">
       <div class="col-md-12 text-center">
         <BarChart :issues="issues"></BarChart>
       </div>
-      <div class="col-md-12"></div>
+      <div class="col-md-12 text-center mt-4">
+        <SunBurstChart :issues="issues"></SunBurstChart>
+      </div>
     </div>
   </div>
 </template>
@@ -33,11 +35,13 @@ import moment from 'moment'
 import axios from 'axios'
 
 import BarChart from './components/BarChart.vue'
+import SunBurstChart from './components/SunBurstChart.vue'
 
 export default {
   name: 'App',
   components: {
-    BarChart
+    BarChart,
+    SunBurstChart
   },
   data() {
     return {
